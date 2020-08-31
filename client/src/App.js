@@ -7,7 +7,7 @@ function App() {
   const [number, setNumber] = useState();
 
   const showPersonsList = async () => {
-    const { data } = await axios.get('http://localhost:3001/api/persons')
+    const { data } = await axios.get('/api/persons')
     setBook(data);
   }
 
@@ -16,12 +16,12 @@ function App() {
   }, [])
 
   const handleDelete = (e) => {
-    axios.delete(`http://localhost:3001/api/persons/${e.target.id}`)
+    axios.delete(`/api/persons/${e.target.id}`)
     showPersonsList();
   }
 
   const handleSubmit = async () => {
-    await axios.post('http://localhost:3001/api/persons', {
+    await axios.post('/api/persons', {
       name, 
       number
     })
