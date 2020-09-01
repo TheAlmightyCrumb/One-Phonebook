@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const Person = require('./models/person');
 
 const app = express();
 
@@ -36,8 +38,10 @@ const generateID = () => {
 }
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons);
-});
+    Person.find({}).then(person => {
+      res.json(person)
+    })
+  })
 
 app.get('/info', (req, res) => {
     const date = new Date();
@@ -45,28 +49,30 @@ app.get('/info', (req, res) => {
 });
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    const person = persons.find((person) => person.id === id);
-    person ? res.json(person) : res.status(404).send("Person not found...");
-});
+    Person.findById(req.params.id).then(person => res.json(person))
+    .catch(e => res.json('No person found...'));
+  })
 
-app.post('/api/persons', (req, res) => {
-    let newPerson = {
-        name: req.body.name,
-        number: req.body.number,
-        id: generateID()
+app.post('/api/persons', async (req, res) => {
+    const {name = undefined, number = undefined} = req.body;
+
+    if (!name || !number) {
+        return res.status(400).json({ error: "Missing name or number." });
     }
 
-    if (!newPerson.name || !newPerson.number) {
-        return res.json({ error: "Missing name or number." });
-    }
+    const result = await Person.find({name});
+    if (result.length) {
+        return res.status(400).json({ error: "Name already exists." });
+    } else {
+        const person = new Person({
+            name,
+            number
+        });
 
-    if (persons.find((person) => person.name === newPerson.name)) {
-        return res.json({ error: "Name already exists." });
+        person.save().then(savedPerson => {
+            res.json(savedPerson);
+        })
     }
-
-    persons = [...persons, newPerson]; // or persons.push(newPersons)
-    res.json(newPerson);
 });
 
 app.delete('/api/persons/:id', (req, res) => {
