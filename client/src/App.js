@@ -21,10 +21,14 @@ function App() {
   }
 
   const handleSubmit = async () => {
-    await axios.post('/api/persons', {
+    const {data} = await axios.post('/api/persons', {
       name, 
       number
-    })
+    });
+    if (data) {
+      console.log(data);
+      await axios.put(`/api/persons/${data}`, { name, number } );
+    }
     showPersonsList();
   }
 
