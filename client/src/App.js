@@ -47,8 +47,8 @@ function App() {
       </ul>
 
       {/* <form onSubmit={handleSubmit}> */}
-        <input onChange={(e) => setName(e.target.value)} type='text' placeholder='name'/>
-        <input onChange={(e) => setNumber(e.target.value)} type='text' placeholder='number'/>
+        <input onChange={(e) => setName(e.target.value)} type='text' placeholder='Name...'/>
+        <input onChange={(e) => setNumber(e.target.value)} type='text' placeholder='Number...'/>
         <button type='submit' onClick={() => handleSubmit()}>Submit</button>
       {/* </form> */}
     </div>
