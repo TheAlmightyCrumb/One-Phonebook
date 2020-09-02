@@ -21,14 +21,19 @@ function App() {
   }
 
   const handleSubmit = async () => {
-    const {data} = await axios.post('/api/persons', {
+    const inputArr = document.querySelectorAll('input');
+    inputArr.forEach(input => input.value='');
+    const { data } = await axios.get('/api/persons');
+    const exist = data.find(person => person.name === name);
+    exist ? await axios.put(`/api/persons/${exist.id}`, {
+      name,
+      number
+    })
+    :
+    await axios.post('/api/persons', {
       name, 
       number
     });
-    if (data) {
-      console.log(data);
-      await axios.put(`/api/persons/${data}`, { name, number } );
-    }
     showPersonsList();
   }
 
@@ -41,11 +46,11 @@ function App() {
         )}
       </ul>
 
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}> */}
         <input onChange={(e) => setName(e.target.value)} type='text' placeholder='name'/>
         <input onChange={(e) => setNumber(e.target.value)} type='text' placeholder='number'/>
-        <button type='submit'>Submit</button>
-      </form>
+        <button type='submit' onClick={() => handleSubmit()}>Submit</button>
+      {/* </form> */}
     </div>
   );
 }

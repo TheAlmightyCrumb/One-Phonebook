@@ -32,10 +32,10 @@ let persons = [
 
 ];
 
-const generateID = () => {
-    const lastId = persons.length > 0 ? persons.length : 0;
-    return lastId + 1;
-}
+// const generateID = () => {
+//     const lastId = persons.length > 0 ? persons.length : 0;
+//     return lastId + 1;
+// }
 
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(person => {
